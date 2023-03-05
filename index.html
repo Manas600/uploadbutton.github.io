@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image Uploader</title>
+    <style>
+      body {
+        background: linear-gradient(to bottom right, #f5c4b2, #ffc7e3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      #upload {
+        display: none;
+      }
+      #upload-label {
+        display: block;
+        width: 200px;
+        height: 50px;
+        background: #fff;
+        color: #000;
+        text-align: center;
+        line-height: 50px;
+        border-radius: 10px;
+        cursor: pointer;
+        margin: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <form>
+      <input
+        type="file"
+        id="upload"
+        accept="image/*"
+        onchange="uploadImage()"
+      />
+      <label for="upload" id="upload-label">Upload Image</label>
+    </form>
+    <script>
+      let count = 0;
+      function uploadImage() {
+        const file = document.getElementById("upload").files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function (event) {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = function () {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            const dataURL = canvas.toDataURL("image/png");
+            const a = document.createElement("a");
+            a.href = dataURL;
+            a.download = `image${count + 1}.png`;
+            a.click();
+            count++;
+          };
+        };
+      }
+    </script>
+  </body>
+</html>
